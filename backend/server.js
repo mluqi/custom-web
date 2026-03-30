@@ -6,11 +6,6 @@ const path = require("path");
 const bodyparser = require("body-parser");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
-const swaggerUi = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
-
-//wilayah routes
-const wilayahRoutes = require("./routes/v1/wilayah/wilayahRoutes");
 
 //routes
 const authRoutes = require("./routes/authRoutes");
@@ -24,7 +19,12 @@ const aboutRoutes = require("./routes/aboutRoutes");
 const activityRoutes = require("./routes/activityRoutes");
 const achievementRoutes = require("./routes/achievementRoutes");
 const jobRoutes = require("./routes/jobRoutes");
+const partnerRoutes = require("./routes/partnerRoutes");
 const sitemapController = require("./controllers/sitemapController");
+const siteSettingRoutes = require("./routes/siteSettingRoutes");
+const dynamicServiceRoutes = require("./routes/dynamicServiceRoutes");
+const internetPageRoutes = require("./routes/internetPageRoutes");
+const entertainmentRoutes = require("./routes/entertainmentRoutes");
 
 //logger
 
@@ -47,8 +47,8 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 200,
+  windowMs: 1 * 60 * 1000,
+  max: 1000,
   message: {
     status: 429,
     error: "Too many requests, please try again later.",
@@ -58,37 +58,6 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
-
-// Swagger Configuration
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "Palindo API Documentation",
-      version: "1.0.0",
-      description: "API documentation for Palindo services",
-    },
-    servers: [
-      {
-        url: process.env.API_URL || "/",
-      },
-    ],
-    components: {
-      securitySchemes: {
-        apiKeyAuth: {
-          type: "apiKey",
-          in: "header",
-          name: "x-palindo-api-key",
-          description: "API Key khusus untuk akses data Wilayah Indonesia",
-        },
-      },
-    },
-  },
-  apis: ["./routes/*.js", "./routes/v1/wilayah/*.js"], // Path to the API docs
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.get("/", (req, res) => {
   res.status(200).send("OK");
@@ -105,16 +74,21 @@ app.use("/api/about", aboutRoutes);
 app.use("/api/activity", activityRoutes);
 app.use("/api/achievement", achievementRoutes);
 app.use("/api/career", jobRoutes);
+app.use("/api/partners", partnerRoutes);
+app.use("/api/settings", siteSettingRoutes);
+app.use("/api/dynamic-services", dynamicServiceRoutes);
+app.use("/api/internet-content", internetPageRoutes);
+app.use("/api/entertainment", entertainmentRoutes);
 
 // Sitemap Route (Dynamic)
 app.get("/sitemap.xml", sitemapController.getSitemap);
 
-//wilayah
-app.use("/api/v1/wilayah", wilayahRoutes);
-
 // Static file serving
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/uploads/documents", express.static(path.join(__dirname, "uploads/documents")));
+app.use(
+  "/uploads/documents",
+  express.static(path.join(__dirname, "uploads/documents")),
+);
 
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {

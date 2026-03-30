@@ -93,6 +93,22 @@ const upload = {
       });
     };
   },
+  any: () => {
+    return (req, res, next) => {
+      multerUpload.any()(req, res, async (err) => {
+        if (err) return next(err);
+        if (!req.files) return next();
+
+        try {
+          const tasks = req.files.map((file) => processFile(file));
+          await Promise.all(tasks);
+          next();
+        } catch (error) {
+          next(error);
+        }
+      });
+    };
+  },
 };
 
 module.exports = upload;

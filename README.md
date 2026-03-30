@@ -1,11 +1,11 @@
-# Palindo.id Project
+# naomiaurora.com Project
 
-Repository ini merupakan monorepo yang menggabungkan Backend dan Frontend untuk aplikasi Palindo.id.
+Repository ini merupakan monorepo yang menggabungkan Backend dan Frontend untuk aplikasi Naomiaurora.id.
 
 ## Struktur Direktori
 
 - **backend/**: Server-side application (Node.js, Express, Sequelize)
-- **palindo-web/**: Client-side application (React, Vite)
+- **nat-web/**: Client-side application (React, Vite)
 
 ## Persiapan (Setup)
 
@@ -17,7 +17,7 @@ Repository ini merupakan monorepo yang menggabungkan Backend dan Frontend untuk 
 
 2. Konfigurasi Environment Variables:
    - Pastikan membuat file `.env` di dalam folder `backend/` sesuai konfigurasi server.
-   - Pastikan membuat file `.env` di dalam folder `palindo-web/` jika diperlukan oleh frontend.
+   - Pastikan membuat file `.env` di dalam folder `nat-web/` jika diperlukan oleh frontend.
 
 ## Menjalankan Aplikasi
 

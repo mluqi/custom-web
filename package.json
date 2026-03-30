@@ -1,16 +1,16 @@
 {
-  "name": "palindo-monorepo",
+  "name": "nat-monorepo",
   "version": "1.0.0",
-  "description": "Monorepo untuk Palindo.id (Backend & Frontend)",
+  "description": "Monorepo untuk Nat.id (Backend & Frontend)",
   "private": true,
   "scripts": {
-    "install:all": "npm install && cd backend && npm install && cd ../palindo-web && npm install",
+    "install:all": "npm install && cd backend && npm install && cd ../nat-web && npm install",
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:backend": "cd backend && npm start",
-    "start:frontend": "cd palindo-web && npm run dev",
+    "start:frontend": "cd nat-web && npm run dev",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd palindo-web && npm run dev"
+    "dev:frontend": "cd nat-web && npm run dev"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

@@ -3,8 +3,7 @@ const { Article, Job, Activity } = require("../models");
 exports.getSitemap = async (req, res) => {
   try {
     // URL Frontend Anda (Sesuaikan jika berbeda di production)
-    let frontendUrl = process.env.FRONTEND_URL || "https://palindo.id";
-    // Hapus trailing slash jika ada untuk mencegah double slash (misal: https://palindo.id//blog)
+    let frontendUrl = process.env.FRONTEND_URL || "https://naomiaurora.com";
     if (frontendUrl.endsWith("/")) {
       frontendUrl = frontendUrl.slice(0, -1);
     }
@@ -19,8 +18,8 @@ exports.getSitemap = async (req, res) => {
       { url: "/about-us", changefreq: "monthly", priority: 0.7 },
       { url: "/contact", changefreq: "monthly", priority: 0.7 },
       { url: "/career", changefreq: "weekly", priority: 0.7 },
-      { url: "/palindo-home", changefreq: "weekly", priority: 0.8 },
-      { url: "/palindo-business", changefreq: "weekly", priority: 0.8 },
+      { url: "/internet-home", changefreq: "weekly", priority: 0.8 },
+      { url: "/internet-business", changefreq: "weekly", priority: 0.8 },
       { url: "/wifi-hotspot", changefreq: "monthly", priority: 0.8 },
       { url: "/iptv", changefreq: "monthly", priority: 0.8 },
       { url: "/cctv", changefreq: "monthly", priority: 0.8 },

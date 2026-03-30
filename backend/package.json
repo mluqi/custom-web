@@ -4,7 +4,6 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:rate": "node scripts/test_rate_limit.js http://api.palindo.id/api/v1/wilayah/provinsi my_api_key 120 50",
     "start": "nodemon server.js"
   },
   "keywords": [],

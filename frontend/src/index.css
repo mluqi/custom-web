@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-accent: var(--color-accent);
+  --color-secondary: var(--color-secondary);
+  --font-family-poppins: "Poppins", sans-serif;
+}
+
+:root {
+  --color-accent: #ac3cac; /* Default Value */
+  --color-secondary: #635bb7; /* Default Value */
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+/* hide scrollbar */
+
+/* For Webkit-based browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: none;
+}
