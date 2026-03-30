@@ -1,4 +1,4 @@
-# naomiaurora.com Project
+# custom-web Project
 
 Repository ini merupakan monorepo yang menggabungkan Backend dan Frontend untuk aplikasi Naomiaurora.id.
 
