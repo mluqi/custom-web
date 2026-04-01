@@ -40,7 +40,7 @@ export const id = {
     subtitle: "Nikmati channel dan platform video streaming terlengkap",
     description:
       "Akses ke lebih dari 50+ Channel TV Lokal maupun Internasional dan Live Event lainnya",
-    viewMore: "Lihat Selengkapnya Channel TV",
+    viewMore: "Lihat Selengkapnya",
     viewLess: "Lihat Lebih Sedikit",
   },
   blog: {

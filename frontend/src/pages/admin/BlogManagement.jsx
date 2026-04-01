@@ -653,7 +653,12 @@ const BlogManagement = () => {
               </h3>
               <p className="text-gray-600 mb-6">
                 Tindakan ini akan menghapus artikel{" "}
-                <strong>{currentArticle?.title}</strong> secara permanen.
+                <strong>
+                  {currentArticle?.title?.id ||
+                    currentArticle?.title?.en ||
+                    "No Title"}
+                </strong>{" "}
+                secara permanen.
               </p>
 
               <div className="flex justify-center gap-3">

@@ -40,7 +40,7 @@ export const en = {
     subtitle: "Enjoy the most complete streaming video platforms and channels",
     description:
       "Access to over 50+ Local and International TV Channels and other Live Events",
-    viewMore: "View More TV Channels",
+    viewMore: "View More",
     viewLess: "View Less",
   },
   blog: {

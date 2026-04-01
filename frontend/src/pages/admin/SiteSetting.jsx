@@ -7,8 +7,15 @@ import {
   Trash2,
   Languages,
   MapPin,
+  Rocket,
+  ShieldCheck,
+  Zap,
+  Wifi,
+  Heart,
+  Users,
 } from "lucide-react";
 import api from "../../services/api";
+import assets from "../../assets/assets";
 import { useSearchParams } from "react-router-dom";
 
 const PAGE_HEADER_GROUPS = [
@@ -28,6 +35,38 @@ const SiteSetting = () => {
   const [previews, setPreviews] = useState({});
   const [fileInputs, setFileInputs] = useState({});
   const [activeTab, setActiveTab] = useState("id"); // 'id', 'en', 'cn'
+
+  // Opsi ikon untuk editor fitur hero (aset gambar & react-icons).
+  const heroIconOptions = [
+    // Dari aset gambar
+    {
+      key: "fiberIcon",
+      node: <img src={assets.fiberIcon} alt="Fiber" />,
+      name: "Fiber",
+    },
+    {
+      key: "fupIcon",
+      node: <img src={assets.fupIcon} alt="FUP" />,
+      name: "FUP",
+    },
+    {
+      key: "modemIcon",
+      node: <img src={assets.modemIcon} alt="Modem" />,
+      name: "Modem",
+    },
+    {
+      key: "stabilIcon",
+      node: <img src={assets.stabilIcon} alt="Stabil" />,
+      name: "Stabil",
+    },
+    // Dari react-icons (Lucide)
+    { key: "lucide-rocket", node: <Rocket />, name: "Rocket" },
+    { key: "lucide-shield-check", node: <ShieldCheck />, name: "Shield" },
+    { key: "lucide-zap", node: <Zap />, name: "Fast" },
+    { key: "lucide-wifi", node: <Wifi />, name: "Wifi" },
+    { key: "lucide-heart", node: <Heart />, name: "Love" },
+    { key: "lucide-users", node: <Users />, name: "Users" },
+  ];
 
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -382,6 +421,15 @@ const SiteSetting = () => {
       // Normalisasi data
       features = features.map((feat) => ({
         ...feat,
+        icon: feat.icon || "",
+        subtitle:
+          typeof feat.subtitle === "object"
+            ? feat.subtitle
+            : {
+                id: feat.subtitle || "",
+                en: feat.subtitle || "",
+                cn: feat.subtitle || "",
+              },
         title:
           typeof feat.title === "object"
             ? feat.title
@@ -407,7 +455,8 @@ const SiteSetting = () => {
       handleInputChange(setting.key, JSON.stringify(newFeatures));
     };
 
-    const isFixedFeatures = setting.group === "landingcontent";
+    const isHeroFeatures = setting.key === "hero_features";
+    const isFixed = setting.group === "landingcontent";
 
     return (
       <div className="space-y-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
@@ -416,7 +465,7 @@ const SiteSetting = () => {
             key={idx}
             className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm relative"
           >
-            {!isFixedFeatures && (
+            {!isFixed && (
               <button
                 type="button"
                 onClick={() => {
@@ -431,9 +480,44 @@ const SiteSetting = () => {
             )}
 
             <div className="grid grid-cols-1 gap-3">
+              {isHeroFeatures && (
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">
+                    Ikon
+                  </label>
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 p-2 bg-gray-100 rounded-lg">
+                    {heroIconOptions.map((opt) => (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => {
+                          const newFeatures = [...features];
+                          newFeatures[idx] = { ...feat, icon: opt.key };
+                          updateFeatures(newFeatures);
+                        }}
+                        className={`flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all ${
+                          feat.icon === opt.key
+                            ? "border-teal-500 bg-teal-50"
+                            : "border-transparent hover:bg-gray-200"
+                        }`}
+                        title={opt.name}
+                      >
+                        <div className="w-8 h-8 flex items-center justify-center text-gray-700">
+                          {React.cloneElement(opt.node, {
+                            className: "w-7 h-7 object-contain",
+                          })}
+                        </div>
+                        <span className="text-[10px] mt-1 text-gray-600 truncate">
+                          {opt.name}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">
-                  Judul Fitur ({activeTab.toUpperCase()})
+                  Judul ({activeTab.toUpperCase()})
                 </label>
                 <input
                   type="text"
@@ -451,17 +535,25 @@ const SiteSetting = () => {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">
-                  Deskripsi ({activeTab.toUpperCase()})
+                  {isHeroFeatures ? "Subtitle" : "Deskripsi"} (
+                  {activeTab.toUpperCase()})
                 </label>
                 <textarea
                   rows="2"
-                  value={feat.description[activeTab] || ""}
+                  value={
+                    (isHeroFeatures
+                      ? feat.subtitle[activeTab]
+                      : feat.description[activeTab]) || ""
+                  }
                   onChange={(e) => {
                     const newFeatures = [...features];
+                    const fieldKey = isHeroFeatures
+                      ? "subtitle"
+                      : "description";
                     newFeatures[idx] = {
                       ...feat,
-                      description: {
-                        ...feat.description,
+                      [fieldKey]: {
+                        ...feat[fieldKey],
                         [activeTab]: e.target.value,
                       },
                     };
@@ -473,7 +565,7 @@ const SiteSetting = () => {
             </div>
           </div>
         ))}
-        {!isFixedFeatures && (
+        {!isFixed && (
           <button
             type="button"
             onClick={() =>
@@ -482,6 +574,7 @@ const SiteSetting = () => {
                 {
                   title: { id: "", en: "", cn: "" },
                   description: { id: "", en: "", cn: "" },
+                  subtitle: { id: "", en: "", cn: "" },
                 },
               ])
             }

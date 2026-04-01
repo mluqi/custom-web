@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Rocket,
+  ShieldCheck,
+  Zap,
+  Wifi,
+  Heart,
+  Users,
+} from "lucide-react";
 import assets from "../assets/assets";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -11,22 +20,39 @@ const HeroSection = () => {
   const [startPos, setStartPos] = useState(0);
   const [currentTranslate, setCurrentTranslate] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const { t } = useLanguage();
+  const { language } = useLanguage();
   const [banners, setBanners] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [heroFeatures, setHeroFeatures] = useState([]);
 
   useEffect(() => {
-    const fetchBanners = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get("/content/banners");
-        setBanners(response.data.filter((b) => b.is_active));
+        const [bannersRes, settingsRes] = await Promise.all([
+          api.get("/content/banners"),
+          api.get("/settings/public"),
+        ]);
+
+        setBanners(bannersRes.data.filter((b) => b.is_active));
+
+        const settings = settingsRes.data;
+        if (settings.hero_features) {
+          try {
+            const featuresData = JSON.parse(settings.hero_features);
+            if (Array.isArray(featuresData)) {
+              setHeroFeatures(featuresData);
+            }
+          } catch (e) {
+            console.error("Failed to parse hero_features", e);
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch banners:", error);
+        console.error("Failed to fetch hero data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchBanners();
+    fetchData();
   }, []);
 
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -46,28 +72,33 @@ const HeroSection = () => {
         ]
       : [];
 
-  const features = [
-    {
-      icon: assets.fiberIcon,
-      title: t("hero.features.fiber.title"),
-      subtitle: t("hero.features.fiber.subtitle"),
-    },
-    {
-      icon: assets.fupIcon,
-      title: t("hero.features.fup.title"),
-      subtitle: t("hero.features.fup.subtitle"),
-    },
-    {
-      icon: assets.modemIcon,
-      title: t("hero.features.modem.title"),
-      subtitle: t("hero.features.modem.subtitle"),
-    },
-    {
-      icon: assets.stabilIcon,
-      title: t("hero.features.stable.title"),
-      subtitle: t("hero.features.stable.subtitle"),
-    },
-  ];
+  // Peta ikon untuk mencocokkan key dari DB dengan komponen/gambar
+  const iconMap = {
+    // Dari assets
+    fiberIcon: <img src={assets.fiberIcon} alt="Fiber Optik" />,
+    fupIcon: <img src={assets.fupIcon} alt="FUP" />,
+    modemIcon: <img src={assets.modemIcon} alt="Wi-Fi" />,
+    stabilIcon: <img src={assets.stabilIcon} alt="Stabil" />,
+    speedometerIcon: <img src={assets.speedometerIcon} alt="Speed" />,
+    support247Icon: <img src={assets.support247Icon} alt="Support" />,
+    shieldCheckIcon: <img src={assets.shieldCheckIcon} alt="Security" />,
+    unlimitedIcon: <img src={assets.unlimitedIcon} alt="Unlimited" />,
+    // Dari react-icons
+    "lucide-rocket": <Rocket />,
+    "lucide-shield-check": <ShieldCheck />,
+    "lucide-zap": <Zap />,
+    "lucide-wifi": <Wifi />,
+    "lucide-heart": <Heart />,
+    "lucide-users": <Users />,
+  };
+
+  const features = heroFeatures.map((feature) => ({
+    iconNode: iconMap[feature.icon] || (
+      <img src={assets.fiberIcon} alt="Feature Icon" />
+    ),
+    title: feature.title?.[language] || feature.title?.id,
+    subtitle: feature.subtitle?.[language] || feature.subtitle?.id,
+  }));
 
   useEffect(() => {
     if (isDragging) return;
@@ -279,16 +310,10 @@ const HeroSection = () => {
                 key={index}
                 className="flex items-center gap-2 md:gap-3 lg:gap-4 text-white"
               >
-                <div className="flex-shrink-0">
-                  <img
-                    src={feature.icon}
-                    alt={feature.subtitle}
-                    width="48"
-                    height="48"
-                    loading="lazy"
-                    decoding="async"
-                    className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 object-contain"
-                  />
+                <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 flex items-center justify-center text-white">
+                  {React.cloneElement(feature.iconNode, {
+                    className: "w-full h-full object-contain",
+                  })}
                 </div>
                 <div>
                   <div className="text-lg md:text-xl lg:text-2xl font-bold">
